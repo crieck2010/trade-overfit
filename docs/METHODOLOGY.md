@@ -43,9 +43,9 @@ below SR₀ is indistinguishable from the best of N coin flips. `N = 1` gives
 `SR₀ = 0` (no selection bias to correct), so DSR = PSR(0).
 
 Worked example (seeded demo, `demo_selection_bias()`): N = 1000 noise
-strategies, T = 252. Best in-sample Sharpe ≈ 3.2 — spectacular. Expected
-best-of-1000 under the null ≈ 3.2 as well, so DSR ≈ 0.6: a coin flip on
-whether any true edge exists. The desk's gate demands DSR ≥ 0.95 → FAIL.
+strategies, T = 252. Best in-sample Sharpe ≈ 3.31 — spectacular. Expected
+best-of-1000 under the null ≈ 3.29, so the winner's own skew/kurtosis give
+DSR ≈ 0.83: not remotely near the 0.95 the desk demands → FAIL.
 That is selection bias made visible.
 
 ## Walk-forward analysis

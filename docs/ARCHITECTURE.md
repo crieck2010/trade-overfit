@@ -38,6 +38,8 @@ src/trade_overfit/
   *selection bias across N trials*. A single Sharpe number cannot be deflated —
   you must pass the in-sample Sharpes of every strategy tried
   (`trial_sharpes`). With one trial the DSR correctly collapses to PSR(0).
+  The DSR uses the strategy's own skew/kurtosis (per Bailey & de Prado), so
+  `demo_selection_bias()` and the desk gate agree exactly.
   The CLI's `--trials N` flag without trial Sharpes only warns; it cannot
   manufacture the correction.
 - **Lazy siblings.** `adapters.py` imports `trade_backtest` / `trade_agents`
@@ -46,8 +48,7 @@ src/trade_overfit/
   plain dicts — trade-paper never imports this package.
 - **Deterministic demos.** All synthetic data comes from `random.Random(seed)`.
   The selection-bias demo (1000 noise strategies, 1 year) is the canonical
-  illustration: best in-sample Sharpe ≈ 3.2, DSR ≈ 0.6 — a coin flip the desk
-  refuses to ship.
+  illustration: best in-sample Sharpe ≈ 3.31, DSR ≈ 0.83 — killed by the desk.
 
 ## Scaling
 

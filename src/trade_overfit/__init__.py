@@ -27,7 +27,7 @@ from .metrics import (
 from .regimes import regime_report, vol_regime_labels
 from .walkforward import walk_forward
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "__version__",

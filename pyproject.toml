@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trade-overfit"
-version = "0.1.0"
+version = "0.1.1"
 description = "The overfitting desk: strategy validation engine — deflated Sharpe ratio, walk-forward analysis, regime splits, pass/fail gates"
 readme = "README.md"
 requires-python = ">=3.10"

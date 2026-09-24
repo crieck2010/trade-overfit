@@ -6,7 +6,7 @@ import json
 import os
 
 PRODUCT = "trade-overfit"
-CURRENT_VERSION = "0.1.0"
+CURRENT_VERSION = "0.1.1"
 UPDATE_URL = "https://api.github.com/repos/crieck2010/trade-overfit/releases/latest"
 
 

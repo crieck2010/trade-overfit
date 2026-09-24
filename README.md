@@ -8,7 +8,7 @@ What it does:
 - **Walk-forward analysis** — rolling or anchored train/test windows, out-of-sample Sharpe per window, train-vs-OOS degradation
 - **Regime splits** — does the edge survive calm *and* stress markets (trailing-vol regimes or your own labels)
 - **Pass/fail gates** — DSR ≥ 0.95, OOS Sharpe > 1.0, max drawdown < 15%, worst-regime Sharpe > 0, beats benchmark net of costs; every threshold configurable, every gate carries its evidence
-- **Seeded selection-bias demo** — 1000 zero-edge strategies: the best in-sample Sharpe looks spectacular (~3.2) and the DSR kills it (~0.6)
+- **Seeded selection-bias demo** — 1000 zero-edge strategies: the best in-sample Sharpe looks spectacular (~3.31) and the DSR kills it (~0.83 < 0.95 gate)
 - **Suite adapters (all lazy)** — returns from trade-backtest, idea gating for trade-agents, PASS-only promotion payloads for trade-paper
 
 Research/backtesting/paper-trading only — never live trading, never personalized investment advice.
@@ -79,7 +79,7 @@ Common options: `--seed 7`, `--rf 0.02`, `--format table|json|csv`.
 
 - *Annualized Sharpe:* `SR = mean(r − rf_p) / stdev(r − rf_p) · √252`, with `rf_p = (1 + rf_annual)^(1/252) − 1`. Undefined (never invented) when T < 2 or volatility is zero.
 - *Probabilistic Sharpe Ratio:* `PSR(SR*) = Φ( (SR̂ − SR*)·√(T−1) / √(1 − skew·SR̂ + (kurt_excess/4)·SR̂²) )` — the probability the true Sharpe exceeds `SR*`, with `Φ` via `math.erf`.
-- *Deflated Sharpe Ratio (Bailey & de Prado 2014):* `DSR = PSR(SR₀)`, where `SR₀ = √V̂ · ((1−γ)·Φ⁻¹(1−1/N) + γ·Φ⁻¹(1−1/(N·e)))`, `γ = 0.5772156649` (Euler–Mascheroni), `V̂` = variance of the N trial Sharpes, `Φ⁻¹` = Acklam's approximation. `SR₀` is the expected Sharpe of the luckiest of N unskilled strategies — the best of N normals grows like `√(2·ln N)`. With N = 1 there is no selection bias, so `SR₀ = 0` and DSR = PSR(0).
+- *Deflated Sharpe Ratio (Bailey & de Prado 2014):* `DSR = PSR(SR₀)`, where `SR₀ = √V̂ · ((1−γ)·Φ⁻¹(1−1/N) + γ·Φ⁻¹(1−1/(N·e)))`, `γ = 0.5772156649` (Euler–Mascheroni), `V̂` = variance of the N trial Sharpes, `Φ⁻¹` = Acklam's approximation. `SR₀` is the expected Sharpe of the luckiest of N unskilled strategies — the best of N normals grows like `√(2·ln N)`. With N = 1 there is no selection bias, so `SR₀ = 0` and DSR = PSR(0). The PSR denominator uses the strategy's own skew/kurtosis.
 - *Walk-forward:* rolling (or anchored/expanding) train windows of `train_len` bars stepped by `test_len`; per test window the OOS Sharpe, OOS return, OOS max drawdown. **Degradation** = mean in-sample Sharpe − mean OOS Sharpe: positive means the edge decays out of sample.
 - *Regime splits:* trailing 63-day annualized realized vol vs its sample median → `stress`/`calm` labels (or your own label vector). The stability verdict is the **worst-regime Sharpe**.
 - *Gates (defaults, all configurable):* DSR ≥ 0.95 · median OOS Sharpe > 1.0 · max drawdown > −15% · worst-regime Sharpe > 0 · annualized excess return vs benchmark after the cost haircut > 0 (skipped, not failed, when no benchmark is given). Missing evidence never passes.

@@ -10,6 +10,7 @@ from __future__ import annotations
 import random
 
 from .dsr import deflated_sharpe_ratio, expected_sharpe_under_null
+from ._stats import excess_kurtosis, skewness
 from .metrics import sharpe_ratio
 
 
@@ -43,7 +44,12 @@ def demo_selection_bias(n_strategies: int = 1000, n: int = 252,
     best_idx = max(range(n_strategies), key=lambda i: trial_sharpes[i])
     best_sr = trial_sharpes[best_idx]
     sr0 = expected_sharpe_under_null(trial_sharpes)
-    dsr = deflated_sharpe_ratio(best_sr, n, trial_sharpes)
+    # Use the winner's own skew/kurtosis, exactly as validate() does, so the
+    # demo DSR and the desk-gate DSR agree.
+    winner = strategies[best_idx]
+    sk = skewness(winner) or 0.0
+    ke = excess_kurtosis(winner) or 0.0
+    dsr = deflated_sharpe_ratio(best_sr, n, trial_sharpes, sk, ke)
     return {
         "n_strategies": n_strategies,
         "n_obs": n,
@@ -51,11 +57,12 @@ def demo_selection_bias(n_strategies: int = 1000, n: int = 252,
         "trial_sharpes": trial_sharpes,
         "best_idx": best_idx,
         "best_in_sample_sharpe": best_sr,
+        "best_skewness": sk,
+        "best_excess_kurtosis": ke,
         "expected_sharpe_under_null": sr0,
         "best_dsr": dsr,
         # "Killed" = fails the desk's standard DSR gate (0.95). The winner's
-        # DSR hovers near 0.5 — a coin flip on whether any true edge exists —
-        # which is exactly the point: a 3+ in-sample Sharpe that the desk
-        # cannot distinguish from luck does not ship.
+        # DSR sits well below it: a 3+ Sharpe the desk cannot confidently
+        # distinguish from the luckiest of 1000 coin flips does not ship.
         "killed": dsr is not None and dsr < 0.95,
     }

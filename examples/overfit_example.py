@@ -16,8 +16,13 @@ demo = demo_selection_bias(n_strategies=1000, n=252, seed=7)
 print(f"tried {demo['n_strategies']} zero-edge strategies on {demo['n_obs']} bars")
 print(f"best in-sample Sharpe : {demo['best_in_sample_sharpe']:.2f}  <- looks amazing")
 print(f"expected best (null)  : {demo['expected_sharpe_under_null']:.2f}  <- luck explains it")
-print(f"DSR of the winner     : {demo['best_dsr']:.2f}  <- a coin flip; desk gate needs 0.95")
+print(f"DSR of the winner     : {demo['best_dsr']:.2f}  <- far short of the 0.95 gate")
 print(f"verdict on the winner : {'KILLED' if demo['killed'] else 'SURVIVED'}")
+
+
+def _v(x):
+    return f"{x:.4f}" if x is not None else "-"
+
 
 print("\n=== Part 2: the winner through the full desk ===")
 winner = demo_noise_strategies(1000, 252, 7)[demo["best_idx"]]
@@ -26,7 +31,7 @@ print(f"desk verdict: {verdict['verdict']} "
       f"({verdict['n_gates_passed']}/{verdict['n_gates']} gates)")
 for g in verdict["gates"]:
     mark = "PASS" if g["passed"] else "FAIL"
-    print(f"  [{mark}] {g['name']:<22} value={g['value']:.4f}  "
+    print(f"  [{mark}] {g['name']:<22} value={_v(g['value'])}  "
           f"(needs {g['op']} {g['threshold']})")
 
 print("\n=== Part 3: a true edge survives ===")
