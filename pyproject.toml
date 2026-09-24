@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trade-overfit"
+version = "0.1.0"
+description = "The overfitting desk: strategy validation engine — deflated Sharpe ratio, walk-forward analysis, regime splits, pass/fail gates"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "crieck2010" }]
+keywords = ["trading", "backtesting", "sharpe", "deflated-sharpe-ratio", "walk-forward", "overfitting", "quantitative-finance"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+trade-overfit = "trade_overfit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/crieck2010/trade-overfit"
+Repository = "https://github.com/crieck2010/trade-overfit"
+
+[tool.setuptools.packages.find]
+where = ["src"]
